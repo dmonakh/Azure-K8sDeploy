@@ -9,9 +9,9 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "storageMon"
-    storage_account_name = "stForK8s"
-    container_name       = "st"
+    resource_group_name  = "tfstoragemon"
+    storage_account_name = "tfstorageaccmon"
+    container_name       = "containername"
     key                  = "terraform.st"
   }
 }
