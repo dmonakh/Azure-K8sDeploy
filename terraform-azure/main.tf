@@ -104,13 +104,11 @@ resource "azurerm_mssql_server" "product" {
 #   end_ip_address      = "0.0.0.0"
 # }
 
-#Create BD 
+# Create BD 
 resource "azurerm_mssql_database" "product" {
-  name                = "my-sql-db"
+  name                = "my-sql-db-wp"
   resource_group_name = azurerm_resource_group.product.name
-  location            = azurerm_resource_group.product.location
   server_name         = azurerm_mssql_server.product.name
-  requested_service_objective_name = "S0"
 
   tags = {
     Environment = "Production"
