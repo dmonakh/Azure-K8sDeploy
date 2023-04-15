@@ -87,8 +87,8 @@ resource "azurerm_sql_server" "product" {
   resource_group_name          = azurerm_resource_group.product.name
   location                     = azurerm_resource_group.product.location
   version                      = "12.0"
-  administrator_login          = "admim"
-  administrator_login_password = "admin1234"
+  administrator_login          = "myadmim"
+  administrator_login_password = "MyP@ssw0rd123"
 
   tags = {
     Environment = "Production"
