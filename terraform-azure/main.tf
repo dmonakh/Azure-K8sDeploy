@@ -102,7 +102,7 @@ resource "azurerm_sql_server" "product" {
 #   server_name         = azurerm_sql_server.product.name
 #   start_ip_address    = "0.0.0.0"
 #   end_ip_address      = "0.0.0.0"
-}
+# }
 
 #Create BD 
 resource "azurerm_sql_database" "product" {
