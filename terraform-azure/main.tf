@@ -95,13 +95,13 @@ resource "azurerm_sql_server" "product" {
   }
 }
 
-#Create firewall for access MySql
-resource "azurerm_sql_server_firewall_rule" "product" {
-  name                = "AllowAll"
-  resource_group_name = azurerm_resource_group.product.name
-  server_name         = azurerm_sql_server.product.name
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
+# #Create firewall for access MySql
+# resource "azurerm_sql_server_firewall_rule" "product" {
+#   name                = "AllowAll"
+#   resource_group_name = azurerm_resource_group.product.name
+#   server_name         = azurerm_sql_server.product.name
+#   start_ip_address    = "0.0.0.0"
+#   end_ip_address      = "0.0.0.0"
 }
 
 #Create BD 
