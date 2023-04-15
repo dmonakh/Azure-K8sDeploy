@@ -82,8 +82,8 @@ resource "local_file" "kubeconfig" {
 }
 
 # Create MySql Server 
-resource "azurerm_sql_server" "product" {
-  name                         = "my-sql-server"
+resource "azurerm_mssql_server" "product" {
+  name                         = "my-sql-for-wp"
   resource_group_name          = azurerm_resource_group.product.name
   location                     = azurerm_resource_group.product.location
   version                      = "12.0"
@@ -105,11 +105,11 @@ resource "azurerm_sql_server" "product" {
 # }
 
 #Create BD 
-resource "azurerm_sql_database" "product" {
+resource "azurerm_mssql_database" "product" {
   name                = "my-sql-db"
   resource_group_name = azurerm_resource_group.product.name
   location            = azurerm_resource_group.product.location
-  server_name         = azurerm_sql_server.product.name
+  server_name         = azurerm_mssql_server.product.name
   requested_service_objective_name = "S0"
 
   tags = {
