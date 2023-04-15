@@ -80,3 +80,39 @@ resource "local_file" "kubeconfig" {
   filename = "${path.module}/kubeconfig"
   content  = azurerm_kubernetes_cluster.product.kube_config_raw
 }
+
+# Create MySql Server 
+resource "azurerm_sql_server" "product" {
+  name                         = "my-sql-server"
+  resource_group_name          = azurerm_resource_group.product.name
+  location                     = azurerm_resource_group.product.location
+  version                      = "12.0"
+  administrator_login          = "admim"
+  administrator_login_password = "admin1234"
+
+  tags = {
+    Environment = "Production"
+  }
+}
+
+#Create firewall for access MySql
+resource "azurerm_sql_server_firewall_rule" "product" {
+  name                = "AllowAll"
+  resource_group_name = azurerm_resource_group.product.name
+  server_name         = azurerm_sql_server.product.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
+#Create BD 
+resource "azurerm_sql_database" "product" {
+  name                = "my-sql-db"
+  resource_group_name = azurerm_resource_group.product.name
+  location            = azurerm_resource_group.product.location
+  server_name         = azurerm_sql_server.product.name
+  requested_service_objective_name = "S0"
+
+  tags = {
+    Environment = "Production"
+  }
+}
