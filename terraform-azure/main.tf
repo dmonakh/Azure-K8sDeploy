@@ -82,7 +82,7 @@ resource "local_file" "kubeconfig" {
 }
 
 # Create MySql Server 
-resource "azurerm_mysql_server" "product" {
+resource "azurerm_mssql_server" "product" {
   name                = "my-sql-mondy-for-wp"
   location            = azurerm_resource_group.product.location
   resource_group_name = azurerm_resource_group.product.name
