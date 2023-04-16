@@ -103,7 +103,7 @@ resource "azurerm_mysql_server" "product" {
 }
 
 # Create BD
-resource "azurerm_sql_database" "product" {
+resource "azurerm_mysql_database" "product" {
   name                = "my-bd-for-wp"
   resource_group_name = azurerm_resource_group.product.name
   location            = azurerm_resource_group.product.location
