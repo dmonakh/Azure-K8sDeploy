@@ -82,11 +82,6 @@ resource "local_file" "kubeconfig" {
 }
 
 # Create MySql Server 
-resource "azurerm_resource_group" "product" {
-  name     = "example-resources"
-  location = "West Europe"
-}
-
 resource "azurerm_mysql_server" "product" {
   name                = "example-mysqlserver"
   location            = azurerm_resource_group.product.location
