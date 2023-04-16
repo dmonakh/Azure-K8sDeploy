@@ -82,35 +82,27 @@ resource "local_file" "kubeconfig" {
 }
 
 # Create MySql Server 
-resource "azurerm_mssql_server" "product" {
-  name                         = "my-sql-for-wp"
-  resource_group_name          = azurerm_resource_group.product.name
-  location                     = azurerm_resource_group.product.location
-  version                      = "12.0"
-  administrator_login          = "myadmim"
-  administrator_login_password = "MyP@ssw0rd123"
-
-  tags = {
-    Environment = "Production"
-  }
+resource "azurerm_resource_group" "product" {
+  name     = "example-resources"
+  location = "West Europe"
 }
 
-# #Create firewall for access MySql
-# resource "azurerm_sql_server_firewall_rule" "product" {
-#   name                = "AllowAll"
-#   resource_group_name = azurerm_resource_group.product.name
-#   server_name         = azurerm_sql_server.product.name
-#   start_ip_address    = "0.0.0.0"
-#   end_ip_address      = "0.0.0.0"
-# }
-
-# Create BD 
-resource "azurerm_mssql_database" "product" {
-  name                = "my-sql-db-wp"
+resource "azurerm_mysql_server" "product" {
+  name                = "example-mysqlserver"
+  location            = azurerm_resource_group.product.location
   resource_group_name = azurerm_resource_group.product.name
-  server_name         = azurerm_mssql_server.product.name
 
-  tags = {
-    Environment = "Production"
-  }
+  administrator_login          = "mysqladminun"
+  administrator_login_password = "H@Sh1CoR3!"
+
+  sku_name   = "B_Gen5_2"
+  storage_mb = 5120
+  version    = "5.7"
+
+  auto_grow_enabled                 = true
+  geo_redundant_backup_enabled      = false
+  infrastructure_encryption_enabled = false
+  public_network_access_enabled     = true
+  ssl_enforcement_enabled           = true
+  ssl_minimal_tls_version_enforced  = "TLS1_2"
 }
