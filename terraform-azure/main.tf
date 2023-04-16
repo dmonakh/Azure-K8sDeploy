@@ -102,7 +102,7 @@ resource "azurerm_mysql_server" "product" {
   ssl_minimal_tls_version_enforced  = "TLS1_2"
 }
 
-# Create BD
+#Create BD
 # resource "azurerm_mysql_database" "product" {
 #   name                = "my-bd-for-wp"
 #   resource_group_name = azurerm_resource_group.product.name
