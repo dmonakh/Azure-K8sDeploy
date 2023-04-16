@@ -102,16 +102,3 @@ resource "azurerm_mysql_server" "product" {
   ssl_enforcement_enabled           = true
   ssl_minimal_tls_version_enforced  = "TLS1_2"
 }
-
-#Create BD
-resource "azurerm_mysql_database" "product" {
-  name                = "my-bd-for-wp"
-  resource_group_name = azurerm_resource_group.product.name
-  location            = azurerm_resource_group.product.location
-  server_name         = azurerm_mysql_server.product.name
-  requested_service_objective_name = "S0"
-
-  tags = {
-    Environment = "Production"
-  }
-}
