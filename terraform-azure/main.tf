@@ -99,4 +99,5 @@ resource "azurerm_mysql_server" "product" {
   geo_redundant_backup_enabled      = false
   infrastructure_encryption_enabled = false
   public_network_access_enabled     = true
+  ssl_enforcement_enabled           = false
 }
