@@ -104,14 +104,22 @@ resource "local_file" "kubeconfig" {
 # }
 
 resource "azurerm_mssql_server" "product" {
-  name                         = "mysql-wpmon"
-  resource_group_name          = azurerm_resource_group.product.name
-  location                     = azurerm_resource_group.product.location
-  version                      = "12.0"
-  administrator_login          = "mysql-wpmon"
-  administrator_login_password = "H@Sh1CoR3!" 
-  minimum_tls_version          = "Disabled"
+  name                          = "mysql-wpmon"
+  resource_group_name           = azurerm_resource_group.product.name
+  location                      = azurerm_resource_group.product.location
+  version                       = "12.0"
+  administrator_login           = "mysql-wpmon"
+  administrator_login_password  = "H@Sh1CoR3!" 
+  public_network_access_enabled = true
+  minimum_tls_version           = "Disabled"
   tags = {
     environment = "production"
   }
+}
+
+resource "azurerm_mssql_firewall_rule" "product" {
+  name             = "FirewallRule1"
+  server_id        = azurerm_mssql_server.product.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "255.255.255.255"
 }
