@@ -104,7 +104,7 @@ resource "local_file" "kubeconfig" {
 # }
 
 resource "azurerm_mssql_server" "product" {
-  name                         = "mssqlserver"
+  name                         = "mysql-wpmon"
   resource_group_name          = azurerm_resource_group.product.name
   location                     = azurerm_resource_group.product.location
   version                      = "12.0"
