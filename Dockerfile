@@ -2,8 +2,8 @@ FROM alpine:3.14
 RUN apk add --no-cache mysql-client
 
 # Set secret for MySQL Server
-ENV SERVER_NAME mysql-wpmon.database.windows.net
-ENV USER_NAME mysql-wpmon@mysql-wpmon.database.windows.net
+ENV SERVER_NAME mysql-wpmon.mysql.database.azure.com
+ENV USER_NAME mysqladmin@mysql-wpmon
 ENV PASSWORD H@Sh1CoR3!
 
 # Connect to the MySQL server and create a new database
