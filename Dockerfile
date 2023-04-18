@@ -3,7 +3,7 @@ RUN apk add --no-cache mysql-client
 
 # Set secret for MySQL Server
 ENV SERVER_NAME mysql-wpmon.mysql.database.azure.com
-ENV USER_NAME mysqladmin@mysql-wpmon
+ENV USER_NAME monadmonsql@mysql-wpmon
 ENV PASSWORD H@Sh1CoR3!
 
 # Connect to the MySQL server and create a new database
