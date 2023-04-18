@@ -109,8 +109,8 @@ resource "azurerm_mssql_server" "product" {
   location                     = azurerm_resource_group.product.location
   version                      = "12.0"
   administrator_login          = "mysql-wpmon"
-  administrator_login_password = "H@Sh1CoR3!"
-  # minimum_tls_version          = "1.2"
+  administrator_login_password = "H@Sh1CoR3!" 
+  minimum_tls_version          = "Disable"
 
   # azuread_administrator {
   #   login_username = "AzureAD Admin"
