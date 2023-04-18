@@ -82,44 +82,31 @@ resource "local_file" "kubeconfig" {
 }
 
 # Create MySql Server 
-# resource "azurerm_mysql_server" "product" {
-#   name                = "mysql-wpmon"
-#   location            = azurerm_resource_group.product.location
-#   resource_group_name = azurerm_resource_group.product.name
+resource "azurerm_mysql_server" "product" {
+  name                = "mysql-wpmon"
+  location            = azurerm_resource_group.product.location
+  resource_group_name = azurerm_resource_group.product.name
 
-#   administrator_login          = "mysql-wpmon"
-#   administrator_login_password = "H@Sh1CoR3!"
+  administrator_login          = "mysql-wpmon"
+  administrator_login_password = "H@Sh1CoR3!"
 
-#   sku_name   = "B_Gen5_2"
-#   storage_mb = 5120
-#   version    = "5.7"
+  sku_name   = "B_Gen5_2"
+  storage_mb = 5120
+  version    = "5.7"
 
-#   auto_grow_enabled                 = true
-#   backup_retention_days             = 30
-#   geo_redundant_backup_enabled      = false
-#   infrastructure_encryption_enabled = false
-#   public_network_access_enabled     = true
-#   ssl_enforcement_enabled           = true
-#   ssl_minimal_tls_version_enforced  = "TLS1_1"
-# }
-
-resource "azurerm_mssql_server" "product" {
-  name                          = "mysql-wpmon"
-  resource_group_name           = azurerm_resource_group.product.name
-  location                      = azurerm_resource_group.product.location
-  version                       = "12.0"
-  administrator_login           = "mysql-wpmon"
-  administrator_login_password  = "H@Sh1CoR3!" 
-  # public_network_access_enabled = true
-  minimum_tls_version           = "Disabled"
-  tags = {
-    environment = "production"
-  }
+  auto_grow_enabled                 = true
+  backup_retention_days             = 30
+  geo_redundant_backup_enabled      = false
+  infrastructure_encryption_enabled = false
+  public_network_access_enabled     = true
+  ssl_enforcement_enabled           = false
+  ssl_minimal_tls_version_enforced  = "TLSEnforcementDisabled"
 }
 
-resource "azurerm_mssql_firewall_rule" "product" {
-  name             = "FirewallRule1"
-  server_id        = azurerm_mssql_server.product.id
-  start_ip_address = "0.0.0.0"
-  end_ip_address   = "255.255.255.255"
+resource "azurerm_mysql_firewall_rule" "product" {
+  name                = "AllowAllIPs"
+  resource_group_name = azurerm_resource_group.product.name
+  server_name         = azurerm_mysql_server.product.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "255.255.255.255"
 }
