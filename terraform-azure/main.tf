@@ -110,7 +110,7 @@ resource "azurerm_mssql_server" "product" {
   version                       = "12.0"
   administrator_login           = "mysql-wpmon"
   administrator_login_password  = "H@Sh1CoR3!" 
-  public_network_access_enabled = true
+  # public_network_access_enabled = true
   minimum_tls_version           = "Disabled"
   tags = {
     environment = "production"
