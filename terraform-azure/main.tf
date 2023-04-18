@@ -82,23 +82,42 @@ resource "local_file" "kubeconfig" {
 }
 
 # Create MySql Server 
-resource "azurerm_mysql_server" "product" {
-  name                = "mysql-wpmon"
-  location            = azurerm_resource_group.product.location
-  resource_group_name = azurerm_resource_group.product.name
+# resource "azurerm_mysql_server" "product" {
+#   name                = "mysql-wpmon"
+#   location            = azurerm_resource_group.product.location
+#   resource_group_name = azurerm_resource_group.product.name
 
+#   administrator_login          = "mysql-wpmon"
+#   administrator_login_password = "H@Sh1CoR3!"
+
+#   sku_name   = "B_Gen5_2"
+#   storage_mb = 5120
+#   version    = "5.7"
+
+#   auto_grow_enabled                 = true
+#   backup_retention_days             = 30
+#   geo_redundant_backup_enabled      = false
+#   infrastructure_encryption_enabled = false
+#   public_network_access_enabled     = true
+#   ssl_enforcement_enabled           = true
+#   ssl_minimal_tls_version_enforced  = "TLS1_1"
+# }
+
+resource "azurerm_mssql_server" "product" {
+  name                         = "mssqlserver"
+  resource_group_name          = azurerm_resource_group.product.name
+  location                     = azurerm_resource_group.product.location
+  version                      = "12.0"
   administrator_login          = "mysql-wpmon"
   administrator_login_password = "H@Sh1CoR3!"
+  # minimum_tls_version          = "1.2"
 
-  sku_name   = "B_Gen5_2"
-  storage_mb = 5120
-  version    = "5.7"
+  # azuread_administrator {
+  #   login_username = "AzureAD Admin"
+  #   object_id      = "00000000-0000-0000-0000-000000000000"
+  # }
 
-  auto_grow_enabled                 = true
-  backup_retention_days             = 30
-  geo_redundant_backup_enabled      = false
-  infrastructure_encryption_enabled = false
-  public_network_access_enabled     = true
-  ssl_enforcement_enabled           = true
-  ssl_minimal_tls_version_enforced  = "TLS1_1"
+  tags = {
+    environment = "production"
+  }
 }
