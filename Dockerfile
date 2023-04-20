@@ -54,7 +54,7 @@ wp --allow-root --path=/var/www/html config create \
   --dbpass=H@Sh1CoR3! \
   --allow-root && \
 wp --allow-root --path=/var/www/html core install \
-  --url=http://localhost \
+  --url=http://http://20.81.107.18/ \
   --title=WP_team \
   --admin_user=admin \
   --admin_password=admin \
