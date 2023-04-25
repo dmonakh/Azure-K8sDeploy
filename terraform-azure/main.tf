@@ -1,78 +1,24 @@
-# Create a resource group
 resource "azurerm_resource_group" "product" {
-  name     = "prodK8s"
-  location = var.resource_group_location
-}
-# Create sg
-resource "azurerm_network_security_group" "product" {
-  name                = "prodK8s-security-group"
-  location            = azurerm_resource_group.product.location
-  resource_group_name = azurerm_resource_group.product.name
-
-  security_rule {
-    name                       = "azure-team"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "0.0.0.0/0"
-    destination_address_prefix = "*"
-  }
-
-  tags = {
-    environment = "dev"
-  }
-}
-
-# Create public ip
-resource "azurerm_public_ip" "product" {
-  name                = "PublicIPForLB"
-  location            = azurerm_resource_group.product.location
-  resource_group_name = azurerm_resource_group.product.name
-  allocation_method   = "Static"
-}
-
-# Create load balancer
-resource "azurerm_lb" "product" {
-  name                = "LoadBalancer"
-  location            = azurerm_resource_group.product.location
-  resource_group_name = azurerm_resource_group.product.name
-
-  frontend_ip_configuration {
-    name                 = "PublicIPAddress"
-    public_ip_address_id = azurerm_public_ip.product.id
-  }
-}
-
-# Create a virtual network within the resource group
-resource "azurerm_virtual_network" "product" {
-  name                = "product-network"
-  resource_group_name = azurerm_resource_group.product.name
-  location            = azurerm_resource_group.product.location
-  address_space       = ["10.0.0.0/16"]
+  name     = var.resource_group_name
+  location = var.location
 }
 
 resource "azurerm_kubernetes_cluster" "product" {
   name                = var.cluster_name
-  location            = azurerm_resource_group.product.location
+  kubernetes_version  = var.kubernetes_version
+  location            = var.location
   resource_group_name = azurerm_resource_group.product.name
   dns_prefix          = var.cluster_name
-  kubernetes_version  = var.kubernetes_version
-
   default_node_pool {
-    name       = "default"
-    node_count = var.agent_count
-    vm_size    = "Standard_B2s"
+    name                = "system"
+    node_count          = var.system_node_count
+    vm_size             = "Standard_DS2_v2"
+    type                = "VirtualMachineScaleSets"
+    enable_auto_scaling = false
   }
 
   identity {
     type = "SystemAssigned"
-  }
-
-  tags = {
-    Environment = "Production"
   }
 }
 
@@ -80,10 +26,9 @@ resource "local_file" "kubeconfig" {
   filename = "${path.module}/kubeconfig"
   content  = azurerm_kubernetes_cluster.product.kube_config_raw
 }
-
 # Create MySql Server 
 resource "azurerm_mysql_server" "product" {
-  name                = "mysql-wpmon"
+  name                = "mysql-wpmaximus"
   location            = azurerm_resource_group.product.location
   resource_group_name = azurerm_resource_group.product.name
 
@@ -102,11 +47,60 @@ resource "azurerm_mysql_server" "product" {
   ssl_enforcement_enabled           = false
   ssl_minimal_tls_version_enforced  = "TLSEnforcementDisabled"
 }
-
 resource "azurerm_mysql_firewall_rule" "product" {
   name                = "AllowAllIPs"
   resource_group_name = azurerm_resource_group.product.name
   server_name         = azurerm_mysql_server.product.name
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
+}
+  # Create public ip
+resource "azurerm_public_ip" "product" {
+  name                = "PublicIPForLB"
+  location            = azurerm_resource_group.product.location
+  resource_group_name = azurerm_resource_group.product.name
+  allocation_method   = "Static"
+}
+
+  # Create load balancer
+resource "azurerm_lb" "product" {
+  name                = "LoadBalancer"
+  location            = azurerm_resource_group.product.location
+  resource_group_name = azurerm_resource_group.product.name
+
+  frontend_ip_configuration {
+    name                 = "LoadBalancer_lb_public_ip"
+    public_ip_address_id = azurerm_public_ip.product.id
+  } 
+}
+
+  resource "azurerm_lb_rule" "product" {
+    loadbalancer_id                = azurerm_lb.product.id
+    name                           = "LB_TCP_80"
+    protocol                       = "Tcp"
+    frontend_port                  = 80
+    backend_port                   = 80
+    frontend_ip_configuration_name = "LoadBalancer_lb_public_ip"
+}
+
+  # Create DNS record
+  resource "azurerm_dns_zone" "product" {
+    name                = "wp-team.pp.ua"
+    resource_group_name = azurerm_resource_group.product.name
+}
+
+
+resource "azurerm_dns_cname_record" "product" {
+  name                = "wordpress"
+  zone_name           = azurerm_dns_zone.product.name
+  resource_group_name = azurerm_resource_group.product.name
+  ttl                 = 300
+  record              = "wp-team.pp.ua"
+}
+resource "azurerm_dns_a_record" "product" {
+  name                = azurerm_dns_zone.product.name
+  zone_name           = azurerm_dns_zone.product.name
+  resource_group_name = azurerm_resource_group.product.name
+  ttl                 = 300
+  target_resource_id  = azurerm_public_ip.product.id
 }
